@@ -1,0 +1,22 @@
+{
+    "make": "SONY",
+    "model": "DSC-WX220",
+    "width": 4896,
+    "height": 3672,
+    "projection_type": "brown",
+    "focal_ratio": 0.85,
+    "orientation": 1,
+    "capture_time": 1467198245.0,
+    "gps": {
+        "latitude": 41.30391622222222,
+        "longitude": -81.7523976388889,
+        "altitude": 340.609,
+        "dop": 3.966
+    },
+    "camera": "v2 sony dsc-wx220 4896 3672 brown 0.85",
+    "opk": {
+        "omega": -3.680307282141569,
+        "phi": 2.344094496847423,
+        "kappa": 82.56272549580216
+    }
+}
