@@ -15,7 +15,6 @@ def main():
     
     carpeta = input("Ruta a carpeta con imagenes: ").strip()
     
-    # Si no termina en "images", buscarla
     if not carpeta.endswith("images"):
         print(f"\n Buscando carpeta 'images' en {carpeta}...")
         carpeta_con_images = Path(carpeta) / "images"
@@ -23,21 +22,21 @@ def main():
             carpeta = str(carpeta_con_images)
             print(f" Encontrada: {carpeta}")
         else:
-            print(f"No se encontró carpeta 'images'")
-            print(f"ODM requiere que las imágenes estén en una carpeta llamada 'images'")
+            print(f"No se encontro carpeta 'images'")
+            print(f"ODM requiere que las imagenes esten en una carpeta llamada 'images'")
             return
     
     max_imgs_input = input("Maximo de maximo [1000]: ").strip()
     max_imgs = int(max_imgs_input) if max_imgs_input else 1000
     
     print("\nCalidad:")
-    print("  1. lowest  - 10-15 min")
-    print("  2. low     - 20-30 min")
-    print("  3. medium  - 40-60 min")
-    print("  4. high    - 1-2 horas")
-    print("  5. ultra   - 2-4 horas")
+    print("  1. lowest")
+    print("  2. low")
+    print("  3. medium")
+    print("  4. high")
+    print("  5. ultra")
     
-    calidad_input = input("\nCalidad [2]: ").strip() or "2"
+    calidad_input = input("\nCalidad [3]: ").strip() or "3"
     calidad_map = {
         "1": "lowest",
         "2": "low",
@@ -45,7 +44,7 @@ def main():
         "4": "high",
         "5": "ultra"
     }
-    calidad = calidad_map.get(calidad_input, "low")
+    calidad = calidad_map.get(calidad_input, "medium")
     
     print(f"\nRESUMEN")
     print("-"*60)

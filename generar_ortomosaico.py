@@ -17,12 +17,11 @@ class OrthomosaicGenerator:
             print(f"La carpeta debe llamarse 'images'")
             print(f"Carpeta actual: {images_path.name}")
             
-            # Crear carpeta images si no existe
             parent = images_path.parent
             images_folder = parent / "images"
             
             if not images_folder.exists():
-                print(f"No se encontró carpeta 'images' en {parent}")
+                print(f"No se encontro carpeta 'images' en {parent}")
                 return False
             
             images_path = images_folder
@@ -35,8 +34,8 @@ class OrthomosaicGenerator:
         total_imgs = len(all_images)
         imgs_a_usar = min(total_imgs, max_imagenes)
         
-        print(f"\nImágenes encontradas: {total_imgs}")
-        print(f"Imágenes a procesar: {imgs_a_usar}")
+        print(f"\nImagenes encontradas: {total_imgs}")
+        print(f"Imagenes a procesar: {imgs_a_usar}")
         
         proyecto_path = images_path.parent
         proyecto_nombre = proyecto_path.name
@@ -147,7 +146,7 @@ class OrthomosaicGenerator:
         
     # Solo para comprobar, en desarrollo
     def _mostrar_resultados(self, proyecto_path: Path):
-        print(f"\n📁 ARCHIVOS GENERADOS:")
+        print(f"\nARCHIVOS GENERADOS:")
         print("-"*60)
         
         # Proceso de ortofoto
