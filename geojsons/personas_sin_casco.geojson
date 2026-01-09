@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-56.164531, -34.901113]
+      },
+      "properties": {
+        "class": "persona_sin_casco",
+        "confidence": 0.92,
+        "altitude": 48.3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-56.16448, -34.90108]
+      },
+      "properties": {
+        "class": "persona_sin_casco",
+        "confidence": 0.78,
+        "altitude": 47.9
+      }
+    }
+  ]
+}

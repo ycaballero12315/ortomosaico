@@ -1,0 +1,20 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-56.164531, -34.901113],
+          [-56.16452, -34.90109],
+          [-56.1645, -34.90106]
+        ]
+      },
+      "properties": {
+        "object": "persona",
+        "confidence_avg": 0.81
+      }
+    }
+  ]
+}
