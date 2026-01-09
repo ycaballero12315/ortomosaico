@@ -44,7 +44,7 @@ class OrthomosaicGenerator:
         print(f"\nEstructura del proyecto:")
         print(f"   Datasets: {datasets_path}")
         print(f"   Proyecto: {proyecto_nombre}")
-        print(f"   Imágenes: {images_path}")
+        print(f"   Imagenes: {images_path}")
         
         quality_map = {
             "lowest": "20",
@@ -80,7 +80,7 @@ class OrthomosaicGenerator:
         
         print(f"\nINICIANDO PROCESAMIENTO")
         print("="*60)
-        print(f"⏱️  Tiempo estimado: {self._estimar_tiempo(imgs_a_usar, calidad)}")
+        print(f"Tiempo estimado: {self._estimar_tiempo(imgs_a_usar, calidad)}")
         print("="*60)
         
         start = datetime.now()
