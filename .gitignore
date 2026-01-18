@@ -1,19 +1,39 @@
-images/
-ortomosaic/
-temp/
-logs/
-*.tmp
-*.log
-*.bak
-.DS_Store
+# Python
 __pycache__/
-*.pyc
-.venv/
-.env
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDEs
+.vscode/
 .idea/
-*.iml
 *.swp
-thumbs.db
-*.aux
-*.out
-*.toc
+*.swo
+*~
+
+# Outputs
+outputs/
+odm*/
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution
+dist/
+build/
+*.egg-info/
