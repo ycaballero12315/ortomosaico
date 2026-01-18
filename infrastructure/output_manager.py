@@ -47,29 +47,30 @@ class OutputManager:
         )
     
     def cleanup_intermediate_files(self, output_dir: Path, keep_logs: bool = True):
-        
+
         if not output_dir.exists():
             return
+    
+        orthophoto_dir = output_dir / "odm_orthophoto"
+    
+        if not orthophoto_dir.exists():
+            return
+
+        for item in output_dir.iterdir():
+            # Saltar odm_orthophoto
+            if item.name == "odm_orthophoto":
+                continue
         
-        dirs_to_remove = [
-            "odm_meshing",
-            "odm_texturing",
-            "odm_dem",
-            "odm_georeferencing",
-            "opensfm",
-            "submodels",
-            "entwine_pointcloud"
-        ]
+            if keep_logs and item.name == "logs":
+                continue
         
-        for dir_name in dirs_to_remove:
-            dir_path = output_dir / dir_name
-            if dir_path.exists():
-                shutil.rmtree(dir_path)
-        
-        if not keep_logs:
-            logs_dir = output_dir / "logs"
-            if logs_dir.exists():
-                shutil.rmtree(logs_dir)
+            try:
+                if item.is_dir():
+                    shutil.rmtree(item)
+                else:
+                    item.unlink()
+            except Exception as e:
+                pass
     
     def save_metadata(self, output_dir: Path, metadata: Dict[str, Any]):
         
