@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Optional, Callable
 from dataclasses import dataclass
 
-
 from core.config_builder import ODMConfig
 
 @dataclass
@@ -39,8 +38,7 @@ class ODMEngine:
             self.logger.info("Ejecutando ODM...")
             self.logger.info("Completado")
             self.logger.debug(' '.join(cmd))
-            
-            # Ejecutar proceso
+        
             process = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
