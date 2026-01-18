@@ -9,7 +9,6 @@ from core.odm_engine import ODMEngine
 from infrastructure.output_manager import OutputManager
 from infrastructure.logger import LoggerFactory
 
-
 class OrthomosaicCLI:
   
     def __init__(self):
@@ -22,20 +21,23 @@ class OrthomosaicCLI:
             self._print_header()
 
             resources = ResourceDetector.detect()
-            print(resources)
+            self.logger.info(resources)
+            print(resources) #Mostrar solo en desarrollo
             
             if not ODMEngine.validate_docker():
-                print("ERROR: Docker no está instalado o no está corriendo")
-                print("\nInstala Docker Desktop desde: https://www.docker.com/")
+                self.logger.warning("ERROR: Docker no esta instalado o no esta corriendo")
+                print("ERROR: Docker no esta instalado o no esta corriendo") #Solo en desarrollo
                 return
             
-            print("Docker detectado\n")
+            self.logger.info("Docker detectado\n")
+            print("Docker detectado\n") #Solo en etapa de desarrollo
 
             images_dir = self._get_images_directory()
             if images_dir is None:
                 return
             
             image_count = self._count_images(images_dir)
+            self.logger.info(f"Encontradas {image_count} imagenes\n")
             print(f"Encontradas {image_count} imagenes\n")
             
             quality = self._get_quality_choice()
@@ -45,17 +47,17 @@ class OrthomosaicCLI:
             config = ConfigBuilder.build(resources, quality)
             
             if not self._confirm_execution(images_dir, image_count, max_images, quality, config):
-                print("\nProceso cancelado")
+                self.logger.info("\nProceso cancelado por el usuario")
+                print("\nProceso cancelado por el usuario") #Solo en etapa de desarrollo
                 return
             
             self._execute_processing(images_dir, config, max_images, image_count)
             
-        except KeyboardInterrupt:
-            print("\n\n Proceso interrumpido por el usuario")
+        except KeyboardInterrupt as e:
+            self.logger.exception(f"\n\n Proceso interrumpido por el usuario {e}")
             sys.exit(1)
         except Exception as e:
             self.logger.exception(f"Error inesperado: {e}")
-            print(f"\nError inesperado: {e}")
             sys.exit(1)
     
     def _print_header(self):
@@ -66,7 +68,7 @@ class OrthomosaicCLI:
         print("="*60)
     
     def _get_images_directory(self) -> Optional[Path]:
-        print("\n[1/4] UBICACIÓN DE IMAGENES")
+        print("\n[1/4] UBICACION DE IMAGENES")
         print("-"*60)
         
         while True:
@@ -86,7 +88,7 @@ class OrthomosaicCLI:
                         print(f"Usando subcarpeta: {images_subdir}")
                         path = images_subdir
                     else:
-                        print(f"No se encontr0 carpeta 'images' en {path}")
+                        print(f"No se encontro carpeta 'images' en {path}")
                         print("ODM requiere que las imagenes esten en una carpeta llamada 'images'")
                         retry = input("\n¿Intentar con otra ruta? [s/n]: ").strip().lower()
                         if retry not in {'s', 'si', 'sí', 'y', 'yes'}:
@@ -94,7 +96,7 @@ class OrthomosaicCLI:
                         continue
 
                 if not path.exists():
-                    print(f"✗ El directorio no existe: {path}")
+                    print(f"El directorio no existe: {path}")
                     retry = input("\n¿Intentar con otra ruta? [s/n]: ").strip().lower()
                     if retry not in {'s', 'si', 'sí', 'y', 'yes'}:
                         return None
@@ -133,7 +135,7 @@ class OrthomosaicCLI:
             if choice in options:
                 quality, _ = options[choice]
                 return quality
-            print("Opción invalida. Elija entre 1-5.")
+            print("Opcion invalida. Elija entre 1-5.")
     
     def _get_max_images(self, total: int) -> Optional[int]:
         print("\n[3/4] CANTIDAD DE IMAGENES")
@@ -187,7 +189,7 @@ class OrthomosaicCLI:
                 return True
             elif response in {'n', 'no'}:
                 return False
-            print("⚠ Responda 's' para si o 'n' para no")
+            print("Responda 's' para si o 'n' para no")
     
     def _execute_processing(
         self,
@@ -234,7 +236,7 @@ class OrthomosaicCLI:
             disk_usage = self.output_manager.get_disk_usage(output_dir)
             
             print("\n" + "="*60)
-            print("✓ PROCESAMIENTO EXITOSO")
+            print("PROCESAMIENTO EXITOSO")
             print("="*60)
             print(f"\nOrtomosaico: {result.orthophoto_path}")
             print(f"Tamanno:      {disk_usage['orthophoto_mb']:.1f} MB")
@@ -242,7 +244,7 @@ class OrthomosaicCLI:
             print("="*60)
         else:
             print("\n" + "="*60)
-            print("✗ PROCESAMIENTO FALLIDO")
+            print("PROCESAMIENTO FALLIDO")
             print("="*60)
             print(f"\nError: {result.error_message}")
             print(f"\nRevise los logs en: logs/")
