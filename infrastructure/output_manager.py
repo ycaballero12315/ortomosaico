@@ -3,27 +3,26 @@ import shutil
 from pathlib import Path
 from typing import Optional, Dict, Any
 from datetime import datetime
-
-
+from config.settings import settings
 class OutputManager:
     
     def __init__(self, base_path: Optional[str] = None):
       
         if base_path is None:
-            base_path = Path.cwd() / "outputs"
+            base_path = settings.OUTPUTS_DIR
         
         self.base_path = Path(base_path)
         self.base_path.mkdir(parents=True, exist_ok=True)
     
     def create_next_output_dir(self) -> Path:
-        base_dir = Path("outputs")
-        base_dir.mkdir(exist_ok=True) 
+        # base_dir = Path("outputs")
+        # base_dir.mkdir(exist_ok=True) 
         
         i = 1
-        while (base_dir / f"odm{i}").exists():
+        while (self.base_path / f"odm{i}").exists():
             i += 1
         
-        new_dir = base_dir / f"odm{i}"
+        new_dir = self.base_path / f"odm{i}"
         new_dir.mkdir(parents=True)
         return new_dir
     
@@ -50,8 +49,11 @@ class OutputManager:
 
         if not output_dir.exists():
             return
-    
-        orthophoto_dir = output_dir / "odm_orthophoto"
+        
+        if keep_logs is None:
+            keep_logs = settings.KEEP_LOGS_AFTER_CLEANUP
+
+        orthophoto_dir = settings.get_orthophoto_dir(output_dir)
     
         if not orthophoto_dir.exists():
             return
@@ -74,7 +76,7 @@ class OutputManager:
     
     def save_metadata(self, output_dir: Path, metadata: Dict[str, Any]):
         
-        metadata_file = output_dir / "metadata.json"
+        metadata_file = output_dir / settings.METADATA_FILENAME
         
         metadata['created_at'] = datetime.now().isoformat()
         metadata['output_dir'] = str(output_dir)
@@ -101,13 +103,16 @@ class OutputManager:
         total_size = 0
         orthophoto_size = 0
         
+        orthophoto_dir = settings.get_orthophoto_dir(output_dir)
+
         for file_path in output_dir.rglob("*"):
             if file_path.is_file():
                 size = file_path.stat().st_size
                 total_size += size
                 
-                if "odm_orthophoto" in str(file_path) and file_path.suffix == ".tif":
-                    orthophoto_size += size
+                if orthophoto_dir.exists() and orthophoto_dir in file_path.parents:
+                    if file_path.suffix == ".tif":
+                        orthophoto_size += size
         
         return {
             "total_mb": total_size / (1024**2),
