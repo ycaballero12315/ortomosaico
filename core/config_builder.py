@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, Any
 from core.resource_detector import SystemResources
+from config.settings import settings
 
 @dataclass
 class ODMConfig:
@@ -104,33 +105,37 @@ class ConfigBuilder:
     }
     
     @staticmethod
-    def build(resources: SystemResources, quality: str = "medium") -> ODMConfig:
+    def build(resources: SystemResources, quality: str | None = None) -> ODMConfig:
+        if quality is None:
+            quality = settings.DEFAULT_QUALITY
+    
         preset = ConfigBuilder.QUALITY_PRESETS.get(
             quality.lower(), 
-            ConfigBuilder.QUALITY_PRESETS["medium"]
-        )
+            ConfigBuilder.QUALITY_PRESETS[settings.DEFAULT_QUALITY]
+            )
 
         max_concurrency = ConfigBuilder._calculate_concurrency(resources)
-        
+        use_gpu = ConfigBuilder._should_use_gpu(resources)
+
         return ODMConfig(
             max_concurrency=max_concurrency,
-            use_gpu=resources.has_gpu,
+            use_gpu=use_gpu,
             **preset
         )
     
     @staticmethod
+    def _should_use_gpu(resources: SystemResources) -> bool:
+        gpu_setting = settings.ENABLE_GPU.lower()
+    
+        if gpu_setting == "true":
+            return True
+        elif gpu_setting == "false":
+            return False
+        else: 
+            return resources.has_gpu
+        
+    @staticmethod
     def _calculate_concurrency(resources: SystemResources) -> int:
-        if resources.has_gpu:
-            # Con GPU: mas agresivo (hasta 16 threads)
-            max_concurrency = min(resources.cpu_cores_physical, 16)
-        else:
-            # Sin GPU: mas conservador (dejar 2 cores libres)
-            max_concurrency = max(2, resources.cpu_cores_physical - 2)
-        
-        # Ajustar segun RAM disponible
-        if resources.available_ram_gb < 8:
-            max_concurrency = min(max_concurrency, 4)
-        elif resources.available_ram_gb < 16:
-            max_concurrency = min(max_concurrency, 8)
-        
-        return max_concurrency
+        ram_based = int(resources.available_ram_gb / settings.PI_FACTOR)
+    
+        return max(settings.MIN_CONCURRENCY, min(resources.cpu_cores_physical, ram_based))
