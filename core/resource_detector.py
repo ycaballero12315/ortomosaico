@@ -25,7 +25,6 @@ class SystemResources:
               GPU:               {gpu_info}
             """
 
-
 class ResourceDetector:
 
     @staticmethod
@@ -80,7 +79,7 @@ class ResourceDetector:
             )
             if result.returncode == 0:
                 memory_mb = float(result.stdout.strip().split('\n')[0])
-                return memory_mb / 1024  # MB a GB
+                return memory_mb / 1024
         except (FileNotFoundError, subprocess.TimeoutExpired, ValueError):
             pass
         return None
